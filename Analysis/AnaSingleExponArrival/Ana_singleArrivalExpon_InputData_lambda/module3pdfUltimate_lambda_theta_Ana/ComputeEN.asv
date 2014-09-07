@@ -1,0 +1,5 @@
+function expectValue=ComputeEN(m , lambda , T)
+
+expectValue = lambda*( ((m-1)/lambda)*(1- sigmax(m-1 , lambda , T ) ) + T * sigmax(m2 , lambda , T)) ;
+
+end

@@ -1,0 +1,11 @@
+function expectValue= E_tau0(lambda,T)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+expectValue = 0 ;
+%expectValue=1/lambda 
+%expectValue=1/lambda - (T*lambda + 1)/(lambda*exp(T*lambda))  ;
+expectValue=- (2/exp(lambda*T + 1) - 1)/lambda - T/exp(lambda*T + 1);
+end
+
+%expectValue=1/lambda - (T*lambda + 1)/(lambda*exp(T*lambda)) ;
+%- (2/exp(lambda*T + 1) - 1)/lambda - T/exp(lambda*T + 1)

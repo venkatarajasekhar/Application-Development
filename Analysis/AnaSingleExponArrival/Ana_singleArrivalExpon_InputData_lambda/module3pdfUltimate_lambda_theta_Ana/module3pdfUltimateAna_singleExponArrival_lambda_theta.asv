@@ -1,0 +1,176 @@
+clc
+clear all
+load Data_singleLambdaMTC_theta15.txt ;
+load Data_singleLambdaMTC_theta30.txt ;
+load Data_singleLambdaMTC_theta60.txt ;
+
+
+
+T = 50 ; %Timer
+
+m =[15 30 60];    %Give Credits
+lambda=[0.01 0.03 0.05 0.07 0.09 0.1 0.3 0.5 0.7 0.9 1 3 5 7 9 10]; 
+lambdaSize = 16 ;
+mSize = 3 ;
+ENarray = zeros(mSize,lambdaSize) ;
+ECuarray = zeros(mSize,lambdaSize) ;
+ECruarray = zeros(mSize,lambdaSize) ;
+for i=1:3
+  for ii=1:lambdaSize
+      ENarray(i,ii) = ComputeEN(m(i) , lambda(ii), T ) ;
+   end
+end
+
+
+
+figure(1);
+subplot(2,2,1) ;
+
+En = semilogx(Data_singleLambdaMTC_theta15(:,1) , Data_singleLambdaMTC_theta15(:,2),'rO' ...
+        ,Data_singleLambdaMTC_theta30(:,1) , Data_singleLambdaMTC_theta30(:,2),'k*' ...
+        ,Data_singleLambdaMTC_theta60(:,1) , Data_singleLambdaMTC_theta60(:,2),'bdiamond' ...
+        ,lambda(1,:), ENarray(1,:),'r-' ...
+        ,lambda(1,:) , ENarray(2,:),'k-.' ...
+        ,lambda(1,:) , ENarray(3,:),'b--') ; 
+% xlabel(['MTC record arrival rate \lambda_m_t_c' ,sprintf('\n'), ...
+%           '(a) Expected number of MTC records in one CDR. '])
+    xcn=  xlabel(['MTC record arrival rate \lambda ' ,sprintf('\n'), ...
+          '(a) Expected number of MTC records in one CDR. ']);
+ycn=ylabel('Average MTC records in one CDR (E[N])');
+%legend('\theta=15c (sim)','\theta=30c (sim)','\theta=60c (sim)','\theta=15c (ana)' ,'\theta=30c (ana)','\theta=60c (ana)');
+legend('m=15 (sim)','m=30 (sim)','m=60 (sim)','m=15 (ana)' ,'m=30 (ana)','m=60 (ana)');
+set(En, 'linewidth', 2);
+set(En, 'MarkerSize', 8);
+set(xcn,'fontsize',12);
+set(ycn,'fontsize',12);
+
+%%figure(2)%%
+for i=1:3
+  for ii=1:lambdaSize
+      ECuarray(i,ii) = ComputeECu( m(i) , lambda(ii) , T ) ;
+   end
+end
+
+
+subplot(2,2,2) ;
+Ecu=semilogx(Data_singleLambdaMTC_theta15(:,1) , Data_singleLambdaMTC_theta15(:,3),'rO' ...
+        ,Data_singleLambdaMTC_theta30(:,1) , Data_singleLambdaMTC_theta30(:,3),'k*' ...
+        ,Data_singleLambdaMTC_theta60(:,1) , Data_singleLambdaMTC_theta60(:,3),'bdiamond' ...
+        ,lambda(1,:), ECuarray(1,:),'r-' ...
+        ,lambda(1,:) , ECuarray(2,:),'k-.' ...
+        ,lambda(1,:) , ECuarray(3,:),'b--') ; 
+
+%     xlabel(['MTC record arrival rate \lambda_m_t_c' ,sprintf('\n'), ...
+%           '(b) Expected amount of unused reserved credit units return to the OCS.'])
+          xcu=xlabel(['MTC record arrival rate \lambda' ,sprintf('\n'), ...
+          '(b) Expected amount of unused reserved credit units return to the OCS.']);
+ycu=ylabel('E[C_u] (Unit: credit unit)');
+%legend('\theta=15c (sim)','\theta=30c (sim)','\theta=60c (sim)','\theta=15c (ana)' ,'\theta=30c (ana)','\theta=60c (ana)');
+legend('m=15 (sim)','m=30 (sim)','m=60 (sim)','m=15 (ana)' ,'m=30 (ana)','m=60 (ana)');
+set(Ecu, 'linewidth', 2);
+set(Ecu, 'MarkerSize', 8);
+set(xcu,'fontsize',12);
+set(ycu,'fontsize',12);
+
+
+%%figure(3)%%
+
+for i=1:mSize
+  for ii=1:lambdaSize
+      ECruarray(i,ii) = ComputeECru( m(i) , lambda(ii) , T ) ;
+      fprintf('module3 (i,ii) = (%d,%d)\n',i,ii) 
+   end
+end
+
+subplot(2,2,3) ;
+Erc=semilogx(Data_singleLambdaMTC_theta15(:,1) , Data_singleLambdaMTC_theta15(:,4),'rO' ...
+        ,Data_singleLambdaMTC_theta30(:,1) , Data_singleLambdaMTC_theta30(:,4),'k*' ...
+        ,Data_singleLambdaMTC_theta60(:,1) , Data_singleLambdaMTC_theta60(:,4),'bdiamond' ...
+        ,lambda(1,:), ECruarray(1,:),'r-' ...
+        ,lambda(1,:) , ECruarray(2,:),'k-.' ...
+        ,lambda(1,:) , ECruarray(3,:),'b--') ;
+%     xlabel(['MTC record arrival rate \lambda_m_t_c ' ,sprintf('\n'), ...         
+%         '(c) Expected amount of unused reserved credit units found at any random checkpoint.'])
+         xcru= xlabel(['MTC record arrival rate \lambda' ,sprintf('\n'), ...         
+        '(c) Expected amount of unused reserved credit units found at any random checkpoint.']);
+ycru=ylabel('E[C_r_u] (Unit: credit unit)');
+%legend('\theta=15c (sim)','\theta=30c (sim)','\theta=60c (sim)','\theta=15c (ana)' ,'\theta=30c (ana)','\theta=60c (ana)')
+legend('m=15 (sim)','m=30 (sim)','m=60 (sim)','m=15 (ana)' ,'m=30 (ana)','m=60 (ana)');
+set(Erc, 'linewidth', 2);
+set(Erc, 'MarkerSize', 8);
+set(xcru,'fontsize',12);
+set(ycru,'fontsize',12);
+
+%%%%%%%%%%%%%%%%%%%%%%%Accuracy%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%declear%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+errorEN=zeros(lambdaSize,mSize);
+errorECu=zeros(lambdaSize,mSize);
+errorECru=zeros(lambdaSize,mSize);
+
+%%%%%%%%%%%%%%%%%%%%%%compute%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+errorEN(:,1)=abs(Data_singleLambdaMTC_theta15(:,2)-ENarray(1,:)')  ;
+errorEN(:,2)=abs(Data_singleLambdaMTC_theta30(:,2)-ENarray(2,:)') ;
+errorEN(:,3)=abs(Data_singleLambdaMTC_theta60(:,2)-ENarray(3,:)' );
+stdEN=std(errorEN) ;
+meanEN= mean(errorEN) ;
+coeofvarEN=abs(stdEN./meanEN)*100 ;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+errorECu(:,1)=abs(Data_singleLambdaMTC_theta15(:,3)-ECuarray(1,:)')   ;
+errorECu(:,2)=abs(Data_singleLambdaMTC_theta30(:,3)-ECuarray(2,:)')  ;
+errorECu(:,3)=abs(Data_singleLambdaMTC_theta60(:,3)-ECuarray(3,:)' ) ;
+stdECu=std(errorECu) ;
+meanECu= mean(errorECu) ;
+coeofvarECu=abs(stdECu./meanECu)*100 ;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+errorECru(:,1)=abs(Data_singleLambdaMTC_theta15(:,4)-ECruarray(1,:)') ./ECruarray(1,:)' ;
+errorECru(:,2)=abs(Data_singleLambdaMTC_theta30(:,4)-ECruarray(2,:)' ) ./ECruarray(2,:)';
+errorECru(:,3)=abs(Data_singleLambdaMTC_theta60(:,4)-ECruarray(3,:)') ./ECruarray(3,:)';
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CCR reduction%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+subplot(2,2,4)
+CCRreductionSim = zeros(lambdaSize,mSize) ;
+CCRReductionAna= zeros(lambdaSize,mSize) ;
+CCRreductionSim(:,1)=(Data_singleLambdaMTC_theta15(:,2)-1)./Data_singleLambdaMTC_theta15(:,2).*100 ;
+CCRreductionSim(:,2)=(Data_singleLambdaMTC_theta30(:,2)-1)./Data_singleLambdaMTC_theta30(:,2).*100 ;
+CCRreductionSim(:,3)=(Data_singleLambdaMTC_theta60(:,2)-1)./Data_singleLambdaMTC_theta60(:,2) .*100;
+CCRReductionAna()
+
+CCRplot = semilogx(Data_singleLambdaMTC_theta15(:,1) , CCRreductionSim(:,1),'r-O' ...
+              ,Data_singleLambdaMTC_theta30(:,1) , CCRreductionSim(:,2),'k-.*' ...
+              ,Data_singleLambdaMTC_theta60(:,1) , CCRreductionSim(:,3),'b--diamond' ) ;  
+
+ xccr=xlabel(['MTC record arrival rate \lambda' ,sprintf('\n'), ...
+       '(d) CCR Message Reduction ']);
+yccr=ylabel('CCR Message Reduction (Unit: %)');
+ legend('m=15','m=30','m=60');
+set(xccr,'fontsize',12);
+set(yccr,'fontsize',12);
+set(CCRplot, 'linewidth', 2);
+set(CCRplot, 'MarkerSize', 8);
+% figure(2)
+% CCRreductionSim = zeros(lambdaSize,mSize) ;
+% CCRreductionAna = zeros(lambdaSize,mSize) ;
+% 
+% CCRreductionSim(:,1)=(Data_singleLambdaMTC_theta15(:,2)-1)./Data_singleLambdaMTC_theta15(:,2).*100 ;
+% CCRreductionSim(:,2)=(Data_singleLambdaMTC_theta30(:,2)-1)./Data_singleLambdaMTC_theta30(:,2).*100 ;
+% CCRreductionSim(:,3)=(Data_singleLambdaMTC_theta60(:,2)-1)./Data_singleLambdaMTC_theta60(:,2) .*100;
+% CCRreductionAna(:,1)=(ENarray(1,:)'-1)./ENarray(1,:)' .*100;
+% CCRreductionAna(:,2)=(ENarray(2,:)'-1)./ENarray(2,:)'.*100 ;
+% CCRreductionAna(:,3)=(ENarray(3,:)'-1)./ENarray(3,:)' .*100;
+% CCRplot = semilogx(Data_singleLambdaMTC_theta15(7:16,1) , CCRreductionSim(7:16,1),'rO' ...
+%               ,Data_singleLambdaMTC_theta30(7:16,1) , CCRreductionSim(7:16,2),'k*' ...
+%               ,Data_singleLambdaMTC_theta60(7:16,1) , CCRreductionSim(7:16,3),'bdiamond' ...
+%               ,lambda(7:16), CCRreductionAna(7:16,1),'r-' ...
+%               ,lambda(7:16) , CCRreductionAna(7:16,2),'k-.' ...
+%               ,lambda(7:16) , CCRreductionAna(7:16,3),'b--') ;  
+% 
+%  xlabel(['\lambda_m_t_c (Unit: \lambda_a)' ,sprintf('\n'), ...
+%        '(a) CCR Message Reduction '])
+% ylabel('CCR Message Reduction (Unit: %)')
+%  legend('m=15 (sim)','m=30 (sim)','m=60 (sim)','m=15 (ana)' ,'m=30 (ana)','m=60 (ana)');
+% 
+% set(CCRplot, 'linewidth', 2);
+% set(CCRplot, 'MarkerSize', 8);
+
+hold on

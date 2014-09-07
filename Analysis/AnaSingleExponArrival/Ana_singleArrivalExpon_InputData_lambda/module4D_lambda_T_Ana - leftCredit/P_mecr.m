@@ -1,0 +1,10 @@
+function prob=P_mecr(i, m, lambda, T)
+prob = 0 ;
+prob= P_112(i, m,lambda,T,tmStar(m,lambda,T)+E_tau0(lambda,T))*(1- sumPoisson( 0,m-2,lambda,T ) ) + P_211(i,m,lambda,T,T+E_tau0(lambda,T)) *  sumPoisson( 0,m-2,lambda,T )   ;
+
+end
+
+%case1: prob= 1/m *(1- sumPoisson( 0,m-2,lambda,T ) ) 
+
+% prob= P_1(i, m,lambda,T) *(1- sumPoisson( 0,m-2,lambda,T ) ) +
+% P_2(i,m,lambda,T) * sumPoisson(0,m-2,lambda,T)  ;

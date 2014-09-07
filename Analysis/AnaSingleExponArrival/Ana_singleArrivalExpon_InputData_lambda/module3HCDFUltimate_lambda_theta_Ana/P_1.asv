@@ -1,0 +1,22 @@
+function prob = P_1(i, m,lambda ,T)
+
+prob=0 ;
+for k = 0:i
+  
+prob = prob +(1/(m-k-1)) /SumNormalize( 0, m-1, lambda,tmStar(m,lambda,T+E_tau0( m,lambda,T)) ) *exp( -lambda*  tmStar(m,lambda,T+E_tau0( m,lambda,T)) ) * (  lambda* tmStar(m,lambda,T+E_tau0( m,lambda,T))  )^(m-k) /factx(m-k) ;
+ 
+end
+%prob =prob + (1/(m-1))  /SumNormalize(0,m-1,lambda,tmStar(m,lambda,T)) *exp( -lambda*  tmStar(m,lambda,T) ) * (  lambda* (tmStar(m,lambda,T)  )^(m-1)) /factx(m-1) ;
+end
+
+
+
+
+% for k = 1:i
+%   
+% prob = prob +(1/(m-k)) /SumNormalize(0,m-1,lambda,tmStar(m,lambda,T)) *exp( -lambda*  tmStar(m,lambda,T) ) * (  lambda* tmStar(m,lambda,T)  )^(m-k-1) /factx(m-k-1) ;
+%  
+% end
+%prob =prob + (1/(m-1))  /SumNormalize(0,m-1,lambda,tmStar(m,lambda,T)) *exp( -lambda*  tmStar(m,lambda,T) ) * (  lambda* (tmStar(m,lambda,T)  )^(m-1)) /factx(m-1) ;
+
+

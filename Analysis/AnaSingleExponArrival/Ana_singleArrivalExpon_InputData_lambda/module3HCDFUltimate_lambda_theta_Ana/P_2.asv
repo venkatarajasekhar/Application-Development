@@ -1,0 +1,14 @@
+function prob = P_2(j, m,lambda ,T)
+
+prob  = 0;
+for k =1:j
+  
+prob = prob + ( 1/(m-k) )  * exp( -lambda *T ) *  ( lambda *T)^(m-k)/factx(m-k-1)     ;
+end
+ %prob = prob*  sumPoisson( 0,m-2,lambda,T ) ;
+end
+
+%prob = prob + ( 1/(m-k) )    *exp( -lambda *T ) *  ( lambda *T)^(m-k)/factx(m-k)  ;
+  %   /SumNormalize(0,m-2,lambda,T)
+  
+  %(1-sumPoisson(0,j,lambda,T))

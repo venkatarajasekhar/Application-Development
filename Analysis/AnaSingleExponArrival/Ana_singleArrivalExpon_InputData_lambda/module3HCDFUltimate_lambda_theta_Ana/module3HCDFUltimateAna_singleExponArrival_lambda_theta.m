@@ -1,0 +1,70 @@
+clc
+clear all
+
+load limitingProb30c10T1lambda.txt ;
+load limitingProb30c50T1lambda.txt ;
+load limitingProb30c20T1lambda.txt ;
+load limitingProb30c5T1lambda.txt ;
+
+
+
+format long e
+T = [10 50] ; %Timer
+TSize = 2 ;
+lambda_unit = 1 ;
+m =30;   %Give Credits
+lambda=1 ;
+
+
+%limitingProb = limitingProb30c20t1lambda ;
+
+figure(1)
+leftCreditP_mecr = zeros(m,TSize) ;
+leftCreditCDF=zeros(m,TSize) ;
+leftCreditSimulation=zeros(m,TSize) ;
+leftCreditSimulationCDF=zeros(m,TSize) ;
+leftCreditSimulation(:,1) = limitingProb30c10T1lambda;
+leftCreditSimulation(:,2) = limitingProb30c50T1lambda;
+
+
+for k = 1 :TSize
+  
+    
+      for w=0:m-1
+        leftCreditSimulationCDF(w+1,k) = sum(leftCreditSimulation(1:w+1,k));
+      end    
+end 
+
+
+for kk =1: TSize
+for j=0:m-1
+  leftCreditP_mecr(j+1,kk)= P_mecr( j,m, lambda*lambda_unit, T(kk) ) ;
+end
+
+  %leftCreditP_mecr(1,kk) = 1-sum(leftCreditP_mecr(1,kk)) ;
+  
+end  
+
+for kkk = 1 :TSize
+   %leftCreditCDF(1,kkk)=1-sum(leftCreditP_mecr(2:m,kkk));
+      for x=0:m-1
+        leftCreditCDF(x+1,kkk) = sum(leftCreditP_mecr(1:x+1,kkk));
+      end    
+end 
+% leftCreditProbFIG=plot(  0:m-1,leftCreditCDF(:,1),'r-^' ...
+%                        ,0:m-1,leftCreditCDF(:,2),'g-*' ) ;  
+
+leftCreditProbFIG=plot(  0:m-1,leftCreditCDF(:,1),'r-' ...
+                       ,0:m-1,leftCreditCDF(:,2),'k--'  ...
+                       ,0:m-1,leftCreditSimulationCDF(:,1),'r^' ...
+                       ,0:m-1,leftCreditSimulationCDF(:,2),'k*') ;                   
+                   
+set(leftCreditProbFIG, 'linewidth', 2);
+set(leftCreditProbFIG, 'MarkerSize', 8);
+legend('\theta=30c ,T=10 time units (ana)','\theta=30c ,T=50 time units (ana)','\theta=30c ,T=10 time units (sim)','\theta=30c ,T=50 time units (sim)');
+ xlabel('Unused Reserved Credit Number');
+% xlabel(['Unused Reserved Credit Number' ,sprintf('\n'), ...
+%         'Fig. 1. The CDF of the unused credit units in PCEF with MECR procrdure.'])
+ylabel('CDF')
+grid on ;
+hold on

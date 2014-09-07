@@ -1,0 +1,58 @@
+
+clear all
+load Data_singleArrivalExpon_T_theta20.txt ;
+load Data_singleArrivalExpon_T_theta40.txt ;
+load Data_singleArrivalExpon_T_theta80.txt ;
+%figure(1)
+
+
+
+
+subplot(2,2,1) ;
+En = semilogx(Data_singleArrivalExpon_T_theta20(:,1) , Data_singleArrivalExpon_T_theta20(:,2),'r:O' ...
+        ,Data_singleArrivalExpon_T_theta40(:,1) , Data_singleArrivalExpon_T_theta40(:,2),'g:*' ...
+        ,Data_singleArrivalExpon_T_theta80(:,1) , Data_singleArrivalExpon_T_theta80(:,2),'b:diamond' ) ; 
+xlabel(['T ( Unit: time unit )' ,sprintf('\n\n'), ...
+       'Fig. 1. The effect of T and \theta( \lambda_m_t_c=5\lambda_a, eventCreditUnit = 1 ) '])
+ylabel('Average MTC Event Record (E[N])')
+title('Expected number of MTC Event Record in one CDR')
+legend('\theta=20c','\theta=40c','\theta=80c')
+set(En, 'linewidth', 2);
+set(En, 'MarkerSize', 8);
+
+
+
+%figure(2)
+subplot(2,2,2) ;
+Ecu=semilogx(Data_singleArrivalExpon_T_theta20(:,1) , Data_singleArrivalExpon_T_theta20(:,3),'r:O' ...
+        ,Data_singleArrivalExpon_T_theta40(:,1) , Data_singleArrivalExpon_T_theta40(:,3),'g:*' ...
+        ,Data_singleArrivalExpon_T_theta80(:,1) , Data_singleArrivalExpon_T_theta80(:,3),'b:diamond' ) ;
+xlabel(['T ( Unit: time unit )' ,sprintf('\n\n'), ...
+       'Fig. 2. The effect of T and \theta( \lambda_m_t_c=5\lambda_a, eventCreditUnit = 1 ) '])
+
+ylabel('E[C_u] (Unit: credit)')
+title('Expected Number of Unused Reserved Credits ')
+legend('\theta=20c','\theta=40c','\theta=80c')
+set(Ecu, 'linewidth', 2);
+set(Ecu, 'MarkerSize', 8);
+
+
+
+%figure(3)
+subplot(2,2,3) ;
+Erc=semilogx(Data_singleArrivalExpon_T_theta20(:,1) , Data_singleArrivalExpon_T_theta20(:,4),'r-O' ...
+        ,Data_singleArrivalExpon_T_theta40(:,1) , Data_singleArrivalExpon_T_theta40(:,4),'g-*' ...
+        ,Data_singleArrivalExpon_T_theta80(:,1) , Data_singleArrivalExpon_T_theta80(:,4),'b-diamond') ;
+xlabel(['T ( Unit: time unit )' ,sprintf('\n\n'), ...
+       'Fig. 3. The effect of T and \theta( \lambda_m_t_c=5\lambda_a,, eventCreditUnit = 1 ,\lambda_u_s_e_r = \lambda_u ) '])
+
+           %\lambda_u = \lambda_user_unit
+ylabel('E[C_r_c] (Unit: credits)')
+title('Expected number of Random User Check Unused Reserved Credits')
+
+legend('\theta=20c','\theta=40c','\theta=80c')
+set(Erc, 'linewidth', 2);
+set(Erc, 'MarkerSize', 8);
+
+
+hold on
