@@ -5,23 +5,27 @@
 #define         INVALID_TIME    (-1.0)
 
 #include <iostream>
+#include <stdio.h>
+#include <time.h>       /* time_t, time, ctime */
 using namespace std;
 
 #include        <stdlib.h>
 #include        "mydef.h"
 
+  return 0;
+}
 
 class Event {
  private:
         int                eventType;    /* eventType=1 for ARRIVAL,=2 for CREDIT_RESERVATION ,=3 for CREDIT_CONSUMED , =4 RANDOM_CHECK*/
-        double             timeStamp;      /* event time stamp             */
+        string             timeStamp;      /* event time stamp             */
         int                arrivalType ;
         Event*             next;           /* pointer to next event node   */
         static Event*      freeList;       /* pointer to free event list   */
         
  public:
         Event() { eventType=0; /* constructor  */
-                  timeStamp=0;
+                  timeStamp = ctime(&timestamp);;
                   arrivalType = 0 ;
                   next      = NULL;
                 }
@@ -37,7 +41,7 @@ class Event {
                                         /*  to the current node         */
         Event*  getNext()               /* get the pointer to the next  */
                 { return next; }        /*  event node                  */
-        double  getTimeStamp()      /* get the timestamp of current node*/
+        string  getTimeStamp()      /* get the timestamp of current node*/
                 { return timeStamp; }
        
         int     getEventType() {return eventType;}
@@ -45,7 +49,7 @@ class Event {
         
         void  setEventType(int t) {eventType=t; }
         void  setarrivalType(int s){arrivalType=s;}    /* set arrivalType      */
-        void  setTimestamp(double t)        /* set timestamp             */
+        void  setTimestamp(string t)        /* set timestamp             */
               { timeStamp=t;}
         void  setNext(Event *E) { next=E;}
         void*   operator new(size_t);   /* new operator of class Event  */
