@@ -5,14 +5,14 @@
                                         /*  system allocation           */
 Event* Event::freeList = NULL;          /* initial free list to empty   */
         
-Event::Event(const int t,const double time1 , const int s) {
+Event::Event(const int t,const string time1 , const int s) {
         timeStamp=time1;
         eventType=t;
         arrivalType = s ;
         next = NULL;               /* next pointer is null         */
 }        
         
-void Event::initNode( const int Etype,const double time1,const int s){
+void Event::initNode( const int Etype,const string time1,const int s){
         eventType=Etype;
         timeStamp    = time1;           /* setup node timestamp */
         arrivalType = s ;
@@ -47,8 +47,8 @@ void* Event::operator new(size_t size) {
  register Event* ptr;
         
         if (freeList == NULL) {         /* is the free list empty?      */
-            freeList  = ptr             /* yes, allocate CHUNK of node  */
-                      = (Event*) new char[CHUNK * size];
+            freeList  = ptr;             /* yes, allocate CHUNK of node  */
+                ptr    = (Event*) new char[CHUNK * size];
             while (ptr != &freeList[CHUNK-1]) { /* while the last node  */
                                                 /*  does not reach      */
                 ptr->next = ptr + 1;    /* setup the next pointer       */
