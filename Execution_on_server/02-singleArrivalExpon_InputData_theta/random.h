@@ -12,13 +12,31 @@ using namespace std;
     
 class Random {
   public: 
-    Random(int seed) {initstate((unsigned int)seed, (char *)state, 128);}
-    Random() {initstate((unsigned int)globalSeed++, (char *)state, 128);}
+    Random(int seed) {
+        try{
+        initstate((unsigned int)seed, (char *)state, 128);
+        }catch(...){
+            
+        }
+    }
+    Random() {
+        try{
+        initstate((unsigned int)globalSeed++, (char *)state, 128);
+        }catch(...){
+            
+        }
+        }
     static void SetGlobalSeed(int seed) {globalSeed = seed;}
     static int GetGlobalSeed() {return globalSeed;}
     virtual double operator++(int) = 0;
   protected:
-    void restore() {setstate((char *)state);}
+    void restore() {
+        try{
+        setstate((char *)state);
+        }catch(...){
+            
+        }
+    }
     double prob() {return random() / 2147483648.0;}
     long state[32];
   private:
@@ -111,8 +129,18 @@ class Uniform: public Random {
       void SetLB(double a) {lb = a;}
       void SetUB(double b) {ub = b;}
       Uniform(int s, double a, double b): Random(s), lb(a), ub(b) 
-      {SetGlobalSeed(s);
-       initstate(s, (char *)state, 128);}
+      {
+       try{
+       SetGlobalSeed(s);
+      }catch(...){
+           
+       }
+       try{
+       initstate(s, (char *)state, 128);
+       }catch(...){
+           
+       }
+      }
       Uniform(double a, double b): Random(), lb(a), ub(b) {}
       Uniform(int s):Random(s){lb=0;ub=1;}
     private:
