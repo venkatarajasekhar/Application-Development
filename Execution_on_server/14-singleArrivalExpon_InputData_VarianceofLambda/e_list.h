@@ -1,6 +1,8 @@
 #ifndef         _E_LIST_H
 #define         _E_LIST_H
 
+#nclude <iostream>
+#include <new>
 #include        "event.h"
 
 class E_List {
@@ -22,7 +24,16 @@ class E_List {
         void            operator delete( void*, /* delete operator of   */
                                          size_t);/* class E_List        */
         E_List          ()                      /* constructor          */
-                        { head = new Event; }
+                        { 
+                         try{
+                         head = new Event;
+                         }
+                         catch (std::bad_alloc& ba)
+                         {
+                            std::cerr << "bad_alloc caught: " << ba.what() << '\n';
+                         }
+                         
+                        }
         ~E_List         ()                     /* destructor           */
                         { next = NULL; }
 };
